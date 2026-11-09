@@ -1,0 +1,126 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { github, owner, projects, projectPath } from '../data/portfolio';
+
+const featured = projects.filter((project) => project.featured);
+const other = projects.filter((project) => !project.featured);
+
+const focus = [
+  { icon: 'workflow', title: '업무 흐름과 권한', detail: '역할에 따라 누가 접근하고 어떤 상태로 이어지는지 살핍니다.' },
+  { icon: 'layers', title: 'API와 데이터 연결', detail: '요청·응답과 저장 시점을 함께 보며 기능 사이의 경계를 다룹니다.' },
+  { icon: 'terminal', title: '환경과 장애 분석', detail: '설정, 로그, 헬스체크를 따라 문제의 원인을 좁혀갑니다.' },
+  { icon: 'spark', title: '에이전트 응용', detail: '업무의 단계와 맥락이 이어지도록 프롬프트와 흐름을 다듬습니다.' },
+] as const;
+
+const skills = [
+  { category: 'Backend', tools: 'Java · Spring Boot · Spring Security · JWT', detail: '도서 API와 작성자 권한, 도메인별 결재 접근 검증' },
+  { category: 'Data & ML', tools: 'Python · PostgreSQL · PyTorch · scikit-learn', detail: '분류 실험과 변수 중요도 분석, PostgreSQL 기반 후속 HTTP 테스트' },
+  { category: 'AI Integration', tools: 'LangGraph · LLM · AI API', detail: '에이전트 프롬프트 개선과 Spring Boot–AI Run 요청 연동' },
+  { category: 'Cloud', tools: 'AWS EC2 · ALB · ASG · RDS', detail: '교육용 배포에서 헬스체크와 애플리케이션 설정 점검' },
+  { category: 'Collaboration', tools: 'Git · GitHub · Issue · Pull Request', detail: '명세와 이슈 정리, PR을 통한 기능 변경과 검토 기록' },
+];
+---
+<Base
+  title="김건우 | 백엔드 개발자 포트폴리오"
+  description="김건우의 개발자 포트폴리오. Spring Boot 백엔드, 권한과 업무 흐름, API·AI 연동 프로젝트에서 맡은 역할과 근거를 소개합니다."
+>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="shell hero-inner">
+      <div class="hero-copy">
+        <p class="hero-kicker"><span aria-hidden="true"></span> GEONWOO KIM <span class="hero-divider" aria-hidden="true"></span> DEVELOPER PORTFOLIO</p>
+        <h1 id="hero-title">업무 흐름을 이해하고,<br class="wide-break" /> 기술을 연결해<br class="wide-break" /> <em>작동하는 시스템</em>을 만듭니다.</h1>
+        <p class="hero-role" lang="en">Backend <span>·</span> System Integration <span>·</span> AI Applications</p>
+        <p class="hero-description">안녕하세요, 주니어 개발자 {owner}입니다. 업무 규칙을 API에 반영하고, 데이터와 외부 서비스를 연결하는 일에 관심이 있습니다.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#projects">대표 프로젝트 <Icon name="down" /></a>
+          <a class="button button-ghost" href={github}><Icon name="github" /> GitHub <Icon name="diagonal" /></a>
+        </div>
+      </div>
+      <div class="hero-figure" aria-hidden="true">
+        <div class="figure-heading"><span>SYSTEM MAP</span><span>FIELD NOTES / 01</span></div>
+        <div class="figure-map">
+          <div class="map-node map-input"><span>01 / CONTEXT</span><strong>업무 흐름</strong></div>
+          <div class="map-stem"></div>
+          <div class="map-split"></div>
+          <div class="map-pair">
+            <div class="map-node"><span>02 / BACKEND</span><strong>권한 · API</strong></div>
+            <div class="map-node"><span>03 / INTEGRATION</span><strong>데이터 · AI</strong></div>
+          </div>
+        </div>
+        <div class="figure-caption"><span class="figure-dot"></span><span>업무 요구에서 기술 연결까지</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="focus-section" aria-labelledby="focus-title">
+    <div class="shell">
+      <div class="focus-heading"><span class="eyebrow">FOCUS AREAS</span><h2 id="focus-title">관심 분야</h2></div>
+      <ul class="focus-grid">
+        {focus.map((area) => (
+          <li>
+            <span class="focus-icon"><Icon name={area.icon} /></span>
+            <div><h3>{area.title}</h3><p>{area.detail}</p></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="shell content-section" id="projects" aria-labelledby="projects-title">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">01 / SELECTED WORK</span>
+        <h2 id="projects-title">대표 프로젝트</h2>
+        <p>어떤 문제를 다뤘고 팀에서 무엇을 맡았는지, 코드와 기록으로 확인할 수 있습니다.</p>
+      </div>
+      <a class="section-jump" href="#other-work">다른 프로젝트 <Icon name="down" /></a>
+    </div>
+    <div class="project-grid">
+      {featured.map((project, index) => <ProjectCard project={project} number={index + 1} />)}
+    </div>
+  </section>
+
+  <section class="shell other-section" id="other-work" aria-labelledby="other-title">
+    <div class="section-heading">
+      <div><span class="eyebrow">02 / MORE WORK</span><h2 id="other-title">다른 프로젝트</h2></div>
+    </div>
+    <ul class="other-list">
+      {other.map((project) => (
+        <li>
+          <a href={projectPath(project.slug)}>
+            <span class="other-period">{project.period}</span>
+            <div><h3>{project.name}</h3><p>{project.subtitle}</p></div>
+            <span class="other-group">{project.group}</span>
+            <span class="other-arrow"><Icon name="right" /></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section-band" id="stack" aria-labelledby="stack-title">
+    <div class="shell content-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">03 / TOOLKIT</span><h2 id="stack-title">기술 스택</h2><p>프로젝트와 실습에서 사용한 기술을 적용 맥락과 함께 정리했습니다.</p></div>
+      </div>
+      <dl class="skills-list">
+        {skills.map((skill) => (
+          <div><dt>{skill.category}</dt><dd><strong>{skill.tools}</strong><span>{skill.detail}</span></dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="shell content-section" id="background" aria-labelledby="background-title">
+    <div class="section-heading">
+      <div><span class="eyebrow">04 / BACKGROUND</span><h2 id="background-title">교육 경험</h2></div>
+    </div>
+    <ul class="background-grid">
+      <li><span class="eyebrow">PROJECT-BASED TRAINING</span><h3>KT AIVLE School</h3><p>Spring Boot·AWS 실습과 AI 에이전트 팀 과제. SmartChain 팀으로 빅프로젝트 최우수상 수상.</p></li>
+      <li><span class="eyebrow">DEVELOPER TRAINING</span><h3>네이버 부스트캠프</h3><p>개발 교육 및 실습 과정에 참여했습니다.</p></li>
+      <li><span class="eyebrow">BACHELOR’S DEGREE</span><h3>인하공업전문대학</h3><p>학사학위 전공심화 과정. 항공편 서비스 통합 프로젝트와 이미지 분류 실험을 수행했습니다.</p></li>
+    </ul>
+  </section>
+</Base>

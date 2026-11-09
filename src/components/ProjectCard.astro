@@ -1,0 +1,24 @@
+---
+import { projectPath, type Project } from '../data/portfolio';
+import Icon from './Icon.astro';
+
+interface Props {
+  project: Project;
+  number: number;
+}
+
+const { project, number } = Astro.props;
+---
+<article class="project-card">
+  <div class="card-kicker"><span>{project.group}</span><span>{String(number).padStart(2, '0')}</span></div>
+  <h3><a href={projectPath(project.slug)}>{project.name}<Icon name="right" /></a></h3>
+  <p class="project-meta">{project.period} <span aria-hidden="true">/</span> {project.kind}</p>
+  <p class="card-problem">{project.problem}</p>
+  <p class="card-contribution"><strong>개인 기여</strong><span>{project.personalContribution.slice(0, 2).join(' · ')}</span></p>
+  <ul class="tag-list" aria-label="프로젝트 기술 구성">
+    {project.stack.map((tech) => <li>{tech}</li>)}
+  </ul>
+  <a class="evidence-link" href={project.evidence[0].url} aria-label={`${project.name} · ${project.evidence[0].label}`}>
+    {project.evidence[0].label}<Icon name="diagonal" />
+  </a>
+</article>

@@ -1,0 +1,96 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { owner, projects, projectPath } from '../../data/portfolio';
+
+export const getStaticPaths = (() => projects.map((project, index) => ({
+  params: { slug: project.slug },
+  props: { project, next: projects[index + 1] },
+}))) satisfies GetStaticPaths;
+
+const { project, next } = Astro.props;
+const collection = project.featured ? '대표 프로젝트' : '다른 프로젝트';
+const collectionPath = project.featured ? '/#projects' : '/#other-work';
+---
+<Base title={`${project.name} | ${owner} 개발자 포트폴리오`} description={project.problem}>
+  <div class="detail-band">
+    <div class="shell detail-intro">
+      <nav class="breadcrumb" aria-label="현재 위치">
+        <a href="/">홈</a><span aria-hidden="true">/</span>
+        <a href={collectionPath}>{collection}</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{project.name}</span>
+      </nav>
+      <p class="eyebrow">{project.group}</p>
+      <h1>{project.name}</h1>
+      <p class="detail-subtitle">{project.subtitle}</p>
+      <div class="detail-meta"><span>{project.period}</span><span>{project.kind}</span></div>
+    </div>
+  </div>
+
+  <div class="shell detail-grid">
+    <div class="detail-main">
+      <section aria-labelledby="problem-title">
+        <span class="eyebrow">01 / CONTEXT</span>
+        <h2 id="problem-title">어떤 문제를 다뤘나요?</h2>
+        <p>{project.problem}</p>
+      </section>
+
+      <section aria-labelledby="contribution-title">
+        <span class="eyebrow">02 / MY CONTRIBUTION</span>
+        <h2 id="contribution-title">개인 기여</h2>
+        <ul class="contribution-list">
+          {project.personalContribution.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section aria-labelledby="outcome-title">
+        <span class="eyebrow">03 / OUTCOME</span>
+        <h2 id="outcome-title">{project.slug === 'cat-dog-cnn' ? '실험 산출물' : '팀 결과'}</h2>
+        <p>{project.teamOutcome}</p>
+      </section>
+
+      <section aria-labelledby="evidence-title">
+        <span class="eyebrow">04 / EVIDENCE</span>
+        <h2 id="evidence-title">코드와 근거</h2>
+        <ul class="source-list">
+          {project.evidence.map((item) => <li><a href={item.url}>{item.label}<Icon name="diagonal" /></a></li>)}
+        </ul>
+      </section>
+
+      {project.flow && (
+        <section aria-labelledby="flow-title">
+          <span class="eyebrow">WORKFLOW</span>
+          <h2 id="flow-title">{project.flow.title}</h2>
+          <ol class="flow-list" role="list">
+            {project.flow.steps.map((step, index) => (
+              <li class:list={[{ 'flow-contribution': step.scope }]}>
+                <span class="flow-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                {step.label}
+                {step.scope && <span class="flow-scope">{step.scope}</span>}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <div class="verification-note">
+        <p><strong>시점과 근거 범위</strong> <span>{project.verification}</span></p>
+      </div>
+    </div>
+
+    <aside class="detail-panel" aria-labelledby="stack-title">
+      <span class="eyebrow">PROJECT STACK</span>
+      <h2 id="stack-title">프로젝트 기술 구성</h2>
+      <p>프로젝트 전체에 사용한 기술입니다. 직접 맡은 일은 개인 기여에 정리했습니다.</p>
+      <ul class="tag-list">
+        {project.stack.map((tech) => <li>{tech}</li>)}
+      </ul>
+    </aside>
+  </div>
+
+  <nav class="shell detail-pagination" aria-label="프로젝트 탐색">
+    <a href={collectionPath}><Icon name="left" /> {collection} 목록</a>
+    {next && <a href={projectPath(next.slug)}>다음 <strong>{next.name}</strong><Icon name="right" /></a>}
+  </nav>
+</Base>

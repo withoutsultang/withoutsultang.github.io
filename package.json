@@ -1,0 +1,24 @@
+{
+  "name": "geonwoo-portfolio",
+  "version": "3.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "build": "astro build",
+    "test:links": "node scripts/check-output.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "7.4.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "cheerio": "1.2.0",
+    "typescript": "5.9.3"
+  }
+}

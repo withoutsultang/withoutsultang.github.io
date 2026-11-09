@@ -1,0 +1,13 @@
+---
+import { github, owner } from '../data/portfolio';
+import Icon from './Icon.astro';
+---
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div>
+      <span class="eyebrow">CONTACT</span>
+      <p class="footer-name">{owner} <span>·</span> Developer Portfolio</p>
+    </div>
+    <a class="footer-link" href={github}><Icon name="github" /> @withoutsultang <Icon name="diagonal" /></a>
+  </div>
+</footer>
